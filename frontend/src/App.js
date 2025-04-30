@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import './App.css';
+
 
 function App() {
   const [gameStatus, setGameStatus] = useState('Welcome to PlaceNDigits Game');
@@ -82,7 +84,7 @@ function App() {
   
 
   return (
-    <div>
+    <div className='container'>
       <h1>{gameStatus}</h1>
       <button onClick={startGame}>Start Game</button>
       <div>
@@ -94,12 +96,12 @@ function App() {
         />
         <button onClick={handleGuess}>Guess</button>
       </div>
-      <div>
+      <div className='feedback'>
         <p>{feedback}</p>
         <p>Guesses: {guesses}</p>
         <p>Time Taken: {timeTaken.toFixed(2)} seconds</p>
       </div>
-      <div>
+      <div className='history'>
       <h2>Guess History</h2>
       <ul>
         {guessHistory.map((entry, index) => (

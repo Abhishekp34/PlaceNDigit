@@ -1,0 +1,70 @@
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(to right, #cfd9df, #e2ebf0);
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .container {
+    background-color: #ffffffcc;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    text-align: center;
+    width: 350px;
+  }
+  
+  h1 {
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  input[type="text"] {
+    padding: 10px;
+    width: 80%;
+    font-size: 1rem;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+  }
+  
+  button {
+    padding: 10px 20px;
+    margin: 5px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 8px;
+    background-color: #4285f4;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  button:hover {
+    background-color: #3367d6;
+  }
+  
+  .feedback {
+    font-size: 1rem;
+    margin-top: 15px;
+    color: #444;
+  }
+  
+  .history {
+    text-align: left;
+    margin-top: 20px;
+    max-height: 200px;
+    overflow-y: auto;
+    padding-left: 20px;
+  }
+  
+  .history li {
+    margin: 4px 0;
+    font-size: 0.9rem;
+    color: #333;
+    list-style-type: decimal;
+  }
+  
