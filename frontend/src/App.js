@@ -6,6 +6,7 @@ function App() {
   const [feedback, setFeedback] = useState('');
   const [guesses, setGuesses] = useState(0);
   const [timeTaken, setTimeTaken] = useState(0);
+  const [guessHistory, setGuessHistory] = useState([]);
 
   // Start a new game
   const startGame = async () => {
@@ -62,6 +63,8 @@ function App() {
         setFeedback(message);
         setGuesses(data.guesses);
         setTimeTaken(data.time || 0);
+        setGuessHistory((prev) => [{guess, message}, ...prev]);
+
         if (data.correct_place === 4) {
           setGameStatus('You won!');
         }
@@ -96,6 +99,17 @@ function App() {
         <p>Guesses: {guesses}</p>
         <p>Time Taken: {timeTaken.toFixed(2)} seconds</p>
       </div>
+      <div>
+      <h2>Guess History</h2>
+      <ul>
+        {guessHistory.map((entry, index) => (
+          <li key={index}>
+            #{guessHistory.length - index}: {entry.message}
+          </li>
+        ))}
+      </ul>
+    </div>
+
     </div>
   );
 }
