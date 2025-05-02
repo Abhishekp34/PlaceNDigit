@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
 
 
@@ -10,29 +10,46 @@ function App() {
   const [timeTaken, setTimeTaken] = useState(0);
   const [guessHistory, setGuessHistory] = useState([]);
   const [liveTime, setLiveTime] = useState(0);
-  const [timerId, setTimerId] = useState(null);
+  const timerRef = useRef(null); // ✅ Use this to track setInterval ID
+  const [isGameActive, setIsGameActive] = useState(false);
+  const [showPlayAgain, setShowPlayAgain] = useState(false);
+  
 
 
 
-  // Start a new game
-  const startGame = async () => {
-    const response = await fetch('http://127.0.0.1:5000/start', {
-      method: 'POST',
-    });
-    setLiveTime(0);  // Reset timer
-    const intervalId = setInterval(() => {
-      setLiveTime(prev => prev + 1);
-    }, 1000);
-    setTimerId(intervalId); // Save interval ID in state
 
-    const data = await response.json();
-    console.log(data);
-    setGameStatus(data.message);
-    setFeedback('');
-    setGuess('');
-    setGuesses(0);
-    setTimeTaken(0);
-  };
+// Start a new game
+const startGame = async () => {
+  // Stop any existing timer
+  if (timerRef.current) {
+    clearInterval(timerRef.current);
+  }
+
+  // Reset live timer and start a new one
+  setLiveTime(0);
+  timerRef.current = setInterval(() => {
+    setLiveTime(prev => prev + 1);
+  }, 1000);
+
+  // Start a new game on the backend
+  const response = await fetch('http://127.0.0.1:5000/start', {
+    method: 'POST',
+  });
+  const data = await response.json();
+  console.log(data);
+
+  // Reset all game state
+  setGameStatus(data.message);
+  setFeedback('');
+  setGuess('');
+  setGuesses(0);
+  setGuessHistory([]);  
+  setTimeTaken(0);
+  setIsGameActive(true);
+};
+
+  
+  
   // Make a guess
   const makeGuess = async () => {
     const response = await fetch('http://127.0.0.1:5000/guess', {
@@ -49,6 +66,8 @@ function App() {
       setGuesses(data.attempts);
     }
   };
+  
+
   
   // Handle Guess 
   const handleGuess = async () => {
@@ -79,7 +98,8 @@ function App() {
 
         if (data.correct_place === 4) {
           setGameStatus('Congratulations, you guessed the correct number!');
-          clearInterval(timerId);
+          clearInterval(timerRef.current);
+          setShowPlayAgain(true);
         }
       } else {
         setFeedback(data.message || 'Something went wrong. Please try again.');
@@ -97,12 +117,22 @@ function App() {
   return (
     <div className='container'>
       <h1>{gameStatus}</h1>
+      {!isGameActive && (
       <button onClick={startGame}>Start Game</button>
-      <div>
+      )}
+
+      {isGameActive && gameStatus.startsWith('Congratulations') && (
+      <button onClick={startGame}>Play Again</button>
+      )}
+
+      <div className="input-section">
         <input
           type="text"
           value={guess}
           onChange={(e) => setGuess(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') handleGuess();
+          }}
           maxLength="4"
         />
         <button onClick={handleGuess}>Guess</button>
